@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthday Wisher 🎉</title>
 
 <!-- html2canvas for download -->
@@ -12,31 +12,33 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{
-    font-family:'Georgia',serif;
-    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    font-family:Georgia, serif;
     min-height:100vh;
     display:flex;
     align-items:center;
     justify-content:center;
+    background:linear-gradient(135deg,#667eea,#764ba2);
     padding:20px;
 }
 
-/* Start Screen */
+/* START SCREEN */
 .start-screen{
     background:white;
     padding:40px;
-    border-radius:20px;
+    border-radius:25px;
     text-align:center;
     box-shadow:0 20px 60px rgba(0,0,0,0.3);
+    width:100%;
+    max-width:400px;
 }
 
 .start-screen input{
-    padding:12px 20px;
-    font-size:18px;
+    width:100%;
+    padding:12px;
+    margin-top:15px;
     border-radius:30px;
     border:1px solid #ccc;
-    width:250px;
-    margin-top:20px;
+    font-size:16px;
 }
 
 .start-screen button{
@@ -50,16 +52,17 @@ body{
     cursor:pointer;
 }
 
-/* Birthday Card */
+/* BIRTHDAY CARD */
 .birthday-card{
     display:none;
     background:rgba(255,255,255,0.95);
-    border-radius:30px;
     padding:50px 40px;
-    max-width:700px;
+    border-radius:30px;
     text-align:center;
+    max-width:650px;
+    width:100%;
     box-shadow:0 20px 60px rgba(0,0,0,0.3);
-    animation:fadeIn 1s ease;
+    animation:fadeIn 0.8s ease;
 }
 
 @keyframes fadeIn{
@@ -67,8 +70,23 @@ body{
     to{opacity:1;transform:scale(1)}
 }
 
-.number{
-    font-size:90px;
+.photo-container{
+    width:200px;
+    height:200px;
+    margin:0 auto 20px;
+    border-radius:20px;
+    overflow:hidden;
+    border:6px solid #764ba2;
+}
+
+.photo-container img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.age{
+    font-size:70px;
     font-weight:bold;
     background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);
     -webkit-background-clip:text;
@@ -76,7 +94,7 @@ body{
 }
 
 .name{
-    font-size:50px;
+    font-size:45px;
     color:#764ba2;
     margin:15px 0;
 }
@@ -94,7 +112,7 @@ body{
     border-radius:40px;
     font-size:18px;
     cursor:pointer;
-    margin:10px;
+    margin:8px;
     background:linear-gradient(135deg,#667eea,#764ba2);
     color:white;
 }
@@ -103,18 +121,22 @@ body{
 
 <body>
 
-<!-- Start Screen -->
+<!-- START SCREEN -->
 <div class="start-screen" id="startScreen">
-    <h1>🎂 Birthday Wisher</h1>
-    <p>Enter the name of the birthday star</p>
+    <h2>🎂 Birthday Wisher</h2>
     <input type="text" id="username" placeholder="Enter Name">
-    <br>
+    <input type="number" id="userage" placeholder="Enter Age">
+    <input type="file" id="photoUpload" accept="image/*">
     <button onclick="generateWish()">Create Wish ✨</button>
 </div>
 
-<!-- Birthday Card -->
+<!-- BIRTHDAY CARD -->
 <div class="birthday-card" id="birthdayCard">
-    <div class="number">🎉</div>
+    <div class="photo-container">
+        <img id="displayPhoto" src="" alt="Birthday Photo">
+    </div>
+
+    <div class="age" id="displayAge"></div>
     <h1>Happy Birthday</h1>
     <div class="name" id="displayName"></div>
     <div class="message" id="messageText"></div>
@@ -127,16 +149,32 @@ body{
 
 function generateWish(){
     const name = document.getElementById("username").value.trim();
+    const age = document.getElementById("userage").value.trim();
+    const photoInput = document.getElementById("photoUpload");
 
-    if(name === ""){
-        alert("Please enter a name!");
+    if(name === "" || age === ""){
+        alert("Please enter both name and age!");
         return;
     }
 
     document.getElementById("displayName").innerText = name + "!";
+    document.getElementById("displayAge").innerText = age + "th 🎉";
+
     document.getElementById("messageText").innerText =
-        "Wishing you a day filled with laughter, love, and unforgettable memories. " +
-        "May this year bring success, happiness, and everything your heart desires! 🎂✨";
+        "Wishing you an incredible " + age + "th birthday filled with joy, laughter, and success! " +
+        "May this year bring new opportunities and beautiful memories. 🎂✨";
+
+    // Handle Photo Upload
+    if(photoInput.files && photoInput.files[0]){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            document.getElementById("displayPhoto").src = e.target.result;
+        }
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        document.getElementById("displayPhoto").src =
+        "https://via.placeholder.com/200x200.png?text=Happy+Birthday";
+    }
 
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("birthdayCard").style.display = "block";
@@ -146,12 +184,12 @@ function goBack(){
     document.getElementById("birthdayCard").style.display = "none";
     document.getElementById("startScreen").style.display = "block";
     document.getElementById("username").value = "";
+    document.getElementById("userage").value = "";
+    document.getElementById("photoUpload").value = "";
 }
 
 function downloadCard(){
-    const card = document.getElementById("birthdayCard");
-
-    html2canvas(card).then(canvas=>{
+    html2canvas(document.getElementById("birthdayCard")).then(canvas=>{
         const link = document.createElement("a");
         link.download = "Birthday_Wish.png";
         link.href = canvas.toDataURL();
@@ -163,3 +201,4 @@ function downloadCard(){
 
 </body>
 </html>
+
