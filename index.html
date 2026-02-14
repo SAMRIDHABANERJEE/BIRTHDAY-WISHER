@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Birthday Wisher 🎉</title>
+
+<!-- html2canvas for download -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    font-family:'Georgia',serif;
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+/* Start Screen */
+.start-screen{
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+
+.start-screen input{
+    padding:12px 20px;
+    font-size:18px;
+    border-radius:30px;
+    border:1px solid #ccc;
+    width:250px;
+    margin-top:20px;
+}
+
+.start-screen button{
+    margin-top:20px;
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    background:#667eea;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+/* Birthday Card */
+.birthday-card{
+    display:none;
+    background:rgba(255,255,255,0.95);
+    border-radius:30px;
+    padding:50px 40px;
+    max-width:700px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.3);
+    animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.8)}
+    to{opacity:1;transform:scale(1)}
+}
+
+.number{
+    font-size:90px;
+    font-weight:bold;
+    background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.name{
+    font-size:50px;
+    color:#764ba2;
+    margin:15px 0;
+}
+
+.message{
+    font-size:20px;
+    color:#555;
+    margin:20px 0;
+    line-height:1.6;
+}
+
+.button{
+    padding:14px 35px;
+    border:none;
+    border-radius:40px;
+    font-size:18px;
+    cursor:pointer;
+    margin:10px;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Start Screen -->
+<div class="start-screen" id="startScreen">
+    <h1>🎂 Birthday Wisher</h1>
+    <p>Enter the name of the birthday star</p>
+    <input type="text" id="username" placeholder="Enter Name">
+    <br>
+    <button onclick="generateWish()">Create Wish ✨</button>
+</div>
+
+<!-- Birthday Card -->
+<div class="birthday-card" id="birthdayCard">
+    <div class="number">🎉</div>
+    <h1>Happy Birthday</h1>
+    <div class="name" id="displayName"></div>
+    <div class="message" id="messageText"></div>
+
+    <button class="button" onclick="downloadCard()">Download Wish 📥</button>
+    <button class="button" onclick="goBack()">New Wish 🔁</button>
+</div>
+
+<script>
+
+function generateWish(){
+    const name = document.getElementById("username").value.trim();
+
+    if(name === ""){
+        alert("Please enter a name!");
+        return;
+    }
+
+    document.getElementById("displayName").innerText = name + "!";
+    document.getElementById("messageText").innerText =
+        "Wishing you a day filled with laughter, love, and unforgettable memories. " +
+        "May this year bring success, happiness, and everything your heart desires! 🎂✨";
+
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("birthdayCard").style.display = "block";
+}
+
+function goBack(){
+    document.getElementById("birthdayCard").style.display = "none";
+    document.getElementById("startScreen").style.display = "block";
+    document.getElementById("username").value = "";
+}
+
+function downloadCard(){
+    const card = document.getElementById("birthdayCard");
+
+    html2canvas(card).then(canvas=>{
+        const link = document.createElement("a");
+        link.download = "Birthday_Wish.png";
+        link.href = canvas.toDataURL();
+        link.click();
+    });
+}
+
+</script>
+
+</body>
+</html>
