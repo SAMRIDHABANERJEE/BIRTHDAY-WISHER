@@ -189,13 +189,38 @@ function goBack(){
 }
 
 function downloadCard(){
-    html2canvas(document.getElementById("birthdayCard")).then(canvas=>{
+
+    const card = document.getElementById("birthdayCard");
+    const buttons = card.querySelectorAll(".button");
+
+    // Hide buttons temporarily
+    buttons.forEach(btn => btn.style.display = "none");
+
+    // Add temporary export styling
+    card.style.boxShadow = "none";
+    card.style.transform = "scale(1)";
+    card.style.background = "white";
+
+    html2canvas(card, {
+        scale: 3,   // Higher resolution
+        useCORS: true,
+        backgroundColor: "#ffffff"
+    }).then(canvas => {
+
         const link = document.createElement("a");
         link.download = "Birthday_Wish.png";
-        link.href = canvas.toDataURL();
+        link.href = canvas.toDataURL("image/png");
         link.click();
+
+        // Restore buttons
+        buttons.forEach(btn => btn.style.display = "inline-block");
+
+        // Restore styles
+        card.style.boxShadow = "0 20px 60px rgba(0,0,0,0.3)";
+        card.style.background = "rgba(255,255,255,0.95)";
     });
 }
+
 
 </script>
 
